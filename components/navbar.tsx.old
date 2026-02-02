@@ -1,0 +1,84 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+
+const links = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/projects", label: "Projects" },
+  { href: "/contact", label: "Contact" },
+] as const;
+
+export default function Navbar() {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+
+  return (
+    <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur">
+      <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
+        {/* Brand */}
+        <Link href="/" className="font-bold tracking-tight">
+          Bryan<span className="text-secondary">Quero</span>
+        </Link>
+
+        {/* Desktop links */}
+        <ul className="hidden items-center gap-6 md:flex">
+          {links.map((l) => {
+            const active = pathname === l.href;
+            return (
+              <li key={l.href}>
+                <Link
+                  href={l.href}
+                  className={[
+                    "text-sm transition-colors hover:text-secondary",
+                    active ? "text-secondary" : "text-foreground/80",
+                  ].join(" ")}
+                >
+                  {l.label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+
+        {/* Mobile button */}
+        <button
+          type="button"
+          className="md:hidden rounded-md border px-3 py-1 text-sm"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-controls="mobile-nav"
+        >
+          Menu
+        </button>
+      </nav>
+
+      {/* Mobile panel */}
+      {open && (
+        <div id="mobile-nav" className="md:hidden border-t bg-background">
+          <ul className="mx-auto max-w-6xl px-4 py-3">
+            {links.map((l) => {
+              const active = pathname === l.href;
+              return (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    onClick={() => setOpen(false)}
+                    className={[
+                      "block rounded-md px-3 py-2 text-sm transition-colors hover:text-secondary",
+                      active ? "text-secondary" : "text-foreground/80",
+                    ].join(" ")}
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+    </header>
+  );
+}
