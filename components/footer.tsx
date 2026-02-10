@@ -40,7 +40,7 @@ export default function Footer() {
 
           {/* Resume */}
           <a
-            href="/Bryan_Alec_Quero_port.pdf"
+            href="/Bryan_Alec_Quero_2-10-26.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted hover:text-primary transition-colors"
