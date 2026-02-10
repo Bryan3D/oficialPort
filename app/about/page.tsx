@@ -663,10 +663,9 @@ export default function AboutPage() {
 
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
                   <span className="font-semibold text-foreground">
-                    20+ years leading BIM coordination, standards, and multidisciplinary production workflows
-                  </span>{" "}
-                  - including running coordination meetings, clash-resolution sessions, and cross-team reviews that keep teams aligned,
-                  accountable, and moving forward.
+                    Software Developer and Game/XR Engineer with 20+ years driving BIM coordination, production standards, and multidisciplinary workflows.</span>{" "} Experienced in leading coordination meetings, resolving clashes, and bridging engineering, design, and development teams to deliver scalable, production-ready systems.
+                  
+                 
                 </p>
 
                 <div className="mt-3 flex flex-wrap items-center gap-2">
