@@ -1,0 +1,60 @@
+.about-title-3d {
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+
+.about-nav-btn.is-active {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+:not(.dark) .about-nav-btn.is-active {
+  color: rgba(0, 0, 0, 0.82);
+}
+
+.dark .about-nav-btn.is-active {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.about-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  background-size: 22px 22px;
+  opacity: 0.25;
+}
+
+.about-particle {
+  opacity: 0.65;
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
+}
+.about-particle {
+  top: attr(data-top);
+  left: attr(data-left);
+}
+
+/* flash */
+
+/* Prevent flash: start hidden in CSS (GSAP will animate in) */
+.about-left,
+.about-right,
+.about-kicker,
+.about-subtitle,
+.about-stat,
+.about-skills,
+.about-image,
+.about-chip,
+.about-callout,
+.about-callout-pill,
+.about-reveal,
+.about-reveal-item {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+/* Nice dots background (optional) */
+.about-dots {
+  background-image: radial-gradient(currentColor 1px, transparent 1px);
+  background-size: 22px 22px;
+  opacity: 0.06;
+}
+

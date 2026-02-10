@@ -9,21 +9,21 @@ function Dot() {
 
 export default function Footer() {
   const date = new Date().toLocaleDateString("en-US", {
-  weekday: "short",
-  month: "short",
-  day: "2-digit",
-  year: "numeric",
-});
+    weekday: "short",
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+  });
 
   return (
     <footer className="mt-16 border-t border-border">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 md:flex-row md:items-center md:justify-between">
         {/* Left */}
         <div className="text-sm text-foreground/70">
-        <span className="text-foreground">Bryan Quero</span>
-        <span className="mx-2 text-foreground/30">·</span>
-        {date}
-    </div>
+          <span className="text-foreground">Bryan Quero</span>
+          <span className="mx-2 text-foreground/30">·</span>
+          {date}
+        </div>
 
         {/* Right */}
         <div className="flex flex-wrap items-center gap-3 text-sm">
@@ -40,9 +40,9 @@ export default function Footer() {
 
           {/* Resume */}
           <a
-            href="/resume.pdf"
+            href="/Bryan_Alec_Quero_port.pdf"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="text-muted hover:text-primary transition-colors"
           >
             Resume
@@ -54,7 +54,7 @@ export default function Footer() {
           <a
             href="https://github.com/Bryan3D"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-muted hover:text-primary transition-colors"
             aria-label="GitHub"
             title="GitHub"
@@ -69,7 +69,7 @@ export default function Footer() {
           <a
             href="https://www.linkedin.com/in/bryanquero/"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-muted hover:text-primary transition-colors"
             aria-label="LinkedIn"
             title="LinkedIn"

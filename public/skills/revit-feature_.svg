@@ -1,0 +1,30 @@
+<!-- <svg width="48" height="48" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <polygon points="50,240 10,230 45,155 75,175" fill="#001a4d" />
+  <polygon points="45,155 80,110 115,130 75,175" fill="#000b2b" />
+  
+  <polygon points="75,175 115,130 90,30 55,40" fill="#051c5e" />
+  <polygon points="90,30 135,10 160,80 115,130" fill="#0a2472" />
+  
+  <polygon points="160,80 135,10 185,50" fill="#031544" />
+  <polygon points="160,80 185,50 205,125 150,150" fill="#143385" />
+  <polygon points="115,130 160,80 150,150" fill="#0c297a" />
+  
+  <polygon points="115,130 150,150 230,220 180,245 90,190" fill="#1b4098" />
+  <polygon points="75,175 115,130 90,190" fill="#082163" />
+</svg> -->
+
+<svg width="48" height="48" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(40, 20)">
+    <polygon points="70,460 30,440 85,290 130,320" fill="#00143a" />
+    <polygon points="85,290 145,180 200,210 130,320" fill="#010a26" />
+    <polygon points="145,180 170,50 110,65 85,290" fill="#031c5e" />
+    
+    <polygon points="170,50 240,20 280,120 200,210" fill="#0a2e7a" />
+    <polygon points="280,120 240,20 330,80" fill="#021240" />
+    <polygon points="280,120 330,80 370,210 270,240" fill="#1b44a3" />
+    <polygon points="200,210 280,120 270,240" fill="#0d2c7d" />
+    
+    <polygon points="200,210 270,240 430,410 340,460 160,350" fill="#2551bc" />
+    <polygon points="130,320 200,210 160,350" fill="#082266" />
+  </g>
+</svg>

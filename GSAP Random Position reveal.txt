@@ -1,0 +1,130 @@
+<!-- CSS Classes 
+ container
+ description
+ img-content
+
+-->
+<style>
+  .container {
+    background-color: #FFF5E8;
+    background-image: radial-gradient(
+        circle at 0% 0%,
+        rgba(174, 148, 244, 0.25) 3%,
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at 20% 0%,
+        rgba(138, 211, 240, 0.25) 3%,
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at 40% 0%,
+        rgba(138, 240, 184, 0.25) 3%,
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at 60% 0%,
+        rgba(192, 240, 138, 0.25) 3%,
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at 80% 0%,
+        rgba(240, 177, 138, 0.25) 3%,
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at 100% 0%,
+        rgba(124, 137, 255, 0.25) 3%,
+        transparent 40%
+      );
+      transition: none; 
+  }
+
+  .description {
+    position: absolute;
+    color: rgb(91, 91, 91);
+    text-align: center;
+    opacity: 0;
+  }
+
+ 
+  .container .img-content {
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    will-change: transform, opacity;
+  }
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", () => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const container = document.querySelector(".container");
+    const description = container.querySelector(".description");
+    
+    const images = gsap.utils.toArray(".container .img-content");
+   
+
+    gsap.set(description, { opacity: 0 });
+
+    const getResponsiveValues = () => {
+      return window.innerWidth < 600
+        ? { minVw: -20, maxVw: 20, minVh: -20, maxVh: 20 }
+        : { minVw: -50, maxVw: 50, minVh: -50, maxVh: 50 };
+    };
+
+    const { minVw, maxVw, minVh, maxVh } = getResponsiveValues();
+
+    
+    images.forEach((item, i) => {
+      const rotation = i % 2 === 0 ? -5 : 5;
+
+      const randomX = gsap.utils.random(minVw, maxVw, 10, true);
+      const randomY = gsap.utils.random(minVh, maxVh, 10, true);
+
+      gsap.set(item, {
+        transformOrigin: "center center",
+        x: randomX,
+        y: randomY,
+        rotate: rotation,
+      });
+    });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".container",
+        start: "top top",
+        end: "+=3000",
+        scrub: 0.5,
+        pin: true,
+        anticipatePin: 1, // You can try 0.5 or 1 for this value
+      },
+    });
+
+    tl.to(description, {
+      yPercent: -10,
+      opacity: 1,
+      duration: 3,
+      ease: "power1.inOut",
+    });
+
+    tl.to(
+      
+      images,
+      {
+        autoAlpha: 1,
+        duration: 0.5,
+        stagger: 1,
+        ease: "sine.out",
+        
+      },
+      ">+=3"
+    );
+  });
+</script>

@@ -1,22 +1,32 @@
+// app/projects/tools/page.tsx
+import Image from "next/image";
+import ToolsCarousel from "./_components/ToolsCarousel";
+
 export default function ToolsProjectPage() {
   return (
-    <section className="space-y-6">
-      <h1 className="text-3xl font-semibold tracking-tight text-primary">
-        Tools & Pipeline
+    <section className="relative space-y-6 overflow-hidden rounded-2xl">
+      {/* FULL PAGE/SECTION BG (behind everything) */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <Image
+          src="/images/GameVR2.svg"
+          alt=""
+          fill
+          priority
+          className="object-cover opacity-[0.9] mix-blend-soft-light"
+        />
+        <div className="absolute inset-0 bg-background/10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/10 to-background" />
+      </div>
+
+      <h1 className="text-3xl font-semibold tracking-tight text-primary uppercase">
+        VR|AR, 3D and Game Tools & Pipeline
       </h1>
 
-      <p className="max-w-2xl text-muted">
-        Automation helpers and workflow tools for 3D / real-time production.
-      </p>
+      <p className="max-w-2xl text-muted">Coming soon</p>
 
-      <div className="rounded-xl border border-border bg-card p-6">
-        <h2 className="text-sm font-semibold text-primary">Example areas</h2>
-        <ul className="mt-3 space-y-2 text-sm text-muted">
-          <li>• Asset import/export utilities</li>
-          <li>• Naming/validation scripts</li>
-          <li>• Build and packaging helpers</li>
-          <li>• Documentation + onboarding tools</li>
-        </ul>
+      {/* GLASS RECTANGLE ON TOP */}
+      <div className="relative z-10 rounded-xl border border-border bg-card/10 backdrop-blur p-6 min-h-[720px]">
+        <ToolsCarousel />
       </div>
     </section>
   );

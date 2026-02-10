@@ -44,3 +44,112 @@ body {
 }
 
 html { scroll-behavior: smooth; }
+
+.about-title-3d {
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+
+.about-dots{
+
+  background-image: radial-gradient(currentColor 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.1;
+}
+
+.dark .about-dots {
+  background-image: radial-gradient(rgba(255,255,255,0.09) 1 px transparent 1px);
+}
+/* scroll */
+
+
+/*  */
+/* Smooth wrapper (only matters if using ScrollSmoother) */
+#smooth-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+#smooth-content {
+  overflow: visible;
+}
+
+/* Horizontal gallery layout */
+.horiz-gallery-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.horiz-gallery-strip {
+  display: flex;
+  gap: 24px;
+  will-change: transform;
+}
+
+.project-wrap {
+  flex: 0 0 70vw;      /* width per slide */
+  max-width: 720px;    /* optional cap */
+}
+
+.project-wrap img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 16px;
+}
+
+/* cadd scroll */
+
+.main-section {
+  height: 100vh;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.deck {
+  position: relative;
+  width: 360px;
+  height: 480px;
+}
+
+.card {
+  position: absolute;
+  inset: 0;
+  background: white;
+  border-radius: 6px;
+  padding: 14px 14px 28px;
+  box-shadow: 0 25px 60px rgba(0,0,0,.45);
+  transform-origin: 50% 90%;
+}
+
+.card img {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.card h4 {
+  margin-top: 12px;
+  font-size: 14px;
+  letter-spacing: .12em;
+}
+
+.card p {
+  font-size: 12px;
+  opacity: .6;
+}
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+}
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/grain.png");
+  opacity: .08;
+  pointer-events: none;
+}
+
+

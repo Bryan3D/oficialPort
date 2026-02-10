@@ -148,13 +148,15 @@ export default function Home() {
         {/* Right */}
         <div className="relative mx-auto w-full max-w-md">
           <div className="hero-photo relative aspect-[4/5] overflow-hidden rounded-3xl border border-border bg-card">
-            <Image
-              src="/me_01.png"
-              alt="Bryan Quero"
-              fill
-              priority
-              className="object-cover grayscale contrast-110"
-            />
+            
+              <Image
+                  src="/me_01.png"
+                  alt="Bryan Quero"
+                  fill
+                  priority
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  className="object-cover"
+                  />
           </div>
 
           <div className="hero-float absolute -bottom-5 left-6 rounded-2xl border border-border bg-background/80 px-4 py-3 text-xs text-muted-foreground backdrop-blur">

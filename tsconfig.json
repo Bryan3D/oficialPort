@@ -28,7 +28,12 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
-, "components/navbar.tsx.old"  ],
+    "**/*.mts",
+    "components/navbar.tsx.old",
+    "app/about/page.tsx.old",
+    "app/about/page.tsx.olds",
+    "app/tailwind.config.ts",
+    "app/projects/tools/page.tsx"
+  ],
   "exclude": ["node_modules"]
 }
