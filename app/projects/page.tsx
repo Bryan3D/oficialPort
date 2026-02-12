@@ -14,7 +14,7 @@ export default function ProjectsPage() {
     {
       title: "Sofware Developer Portfolio",
       Image: "/software-engineer.png",
-      description: "Comming Soon",
+      description: "Software Developer Portfolio",
       tags: [
         "Next.js",
         "Tailwind",
@@ -35,7 +35,7 @@ export default function ProjectsPage() {
     {
       title: "VR | AR, 3D and Game Tools & Pipeline",
       Image: "/vr.png",
-      description: "Comming Soon",
+      description: "VR | AR, 3D and Game Tools & Pipeline",
       tags: [
         "Pipeline",
         "Automation",
@@ -56,14 +56,14 @@ export default function ProjectsPage() {
     {
       title: "Architectural Visualization",
       Image: "/3d-modeling.png",
-      description: "Comming Soon",
+      description: "Architectural Visualization",
       tags: ["XR", "Unreal", "WebGL"],
       href: "/projects/arch",
     },
     {
       title: "Cadd",
       Image: "/architecture.png",
-      description: "Comming Soon",
+      description: "BIM, Revit, AutoCAD, Dynamo, C#.",
       tags: ["AutoCAD", "Revit", "BIM", "Plugins", "C#", "Dynamo"],
       href: "/projects/Cadd",
     },
