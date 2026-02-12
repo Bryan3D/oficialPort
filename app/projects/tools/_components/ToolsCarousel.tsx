@@ -1,4 +1,3 @@
-// tools/_components/ToolsCarousel.tsx
 "use client";
 
 import * as React from "react";
@@ -14,29 +13,31 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-// Canvas must be client-only (avoid SSR issues)
+// ✅ Only load 3D when modal is open
 const GltfPreview = dynamic(() => import("./GltfPreview"), { ssr: false });
 
 type SlideBase = {
-  id: string; // ✅ stable unique key
+  id: string;
   title: string;
   subtitle: string;
+  thumb?: string; // lightweight image used in carousel
 };
 
 type ImageSlide = SlideBase & {
   type: "image";
-  src: string; // /public/...
+  src: string; // full image (optional to show in modal)
 };
 
 type VideoSlide = SlideBase & {
   type: "video";
-  src: string; // /public/videos/...
-  poster?: string; // optional
+  src: string;
+  poster?: string; // used as carousel thumb + video poster
 };
 
 type GltfSlide = SlideBase & {
   type: "gltf";
-  src: string; // /public/models/... .glb
+  src: string; // glb path
+  thumb?: string; // recommended thumbnail for carousel
 };
 
 type Slide = ImageSlide | VideoSlide | GltfSlide;
@@ -46,76 +47,80 @@ const SLIDES: Slide[] = [
     id: "livewire-gltf",
     type: "gltf",
     title: "LiveWire - 3D Preview",
-    subtitle: "GLB model preview inside the carousel.",
+    subtitle: "GLB model preview (loads only when expanded).",
     src: "/models/LiveWire.glb",
+    thumb: "/images/livewire-thumb.jpg", // ✅ create a screenshot thumb for speed
   },
-  // {
-  //   id: "blueprint-carcolor-video",
-  //   type: "video",
-  //   title: "Blueprint Car Color - Unreal Demo",
-  //   subtitle: "Realtime material/color switching demo video.",
-  //   src: "/videos/blueprintCArColorUnrealDemo.mp4",
-  //   // poster: "/images/blueprint-car-poster.jpg",
-  // },
   {
     id: "vr-proto-01",
     type: "video",
     title: "VR Prototyping - Unreal Demo",
     subtitle: "VR prototyping demo video.",
     src: "/videos/vrProto2.mp4",
+    poster: "/images/vrproto-poster.jpg",
   },
   {
     id: "vr-proto-02",
     type: "video",
-    title: "VR Prototyping - Unreal Demo",
-    subtitle: "VR prototyping demo video.",
+    title: "Canopies - Drone / VR",
+    subtitle: "Canopies demo video.",
     src: "/videos/Canopys.mp4",
+    poster: "/images/canopys-poster.jpg",
   },
 ];
 
 const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(max, n));
 
-function SlideMedia({ slide }: { slide: Slide }) {
-  if (slide.type === "image") {
+function CarouselThumb({ slide, priority }: { slide: Slide; priority: boolean }) {
+  const thumb =
+    slide.type === "video"
+      ? slide.poster
+      : slide.type === "image"
+      ? slide.src
+      : slide.thumb;
+
+  if (!thumb) {
+    // Fallback if you don't have posters/thumbs yet
     return (
-      <div className="relative aspect-[16/9] w-full">
-        <Image
-          src={slide.src}
-          alt={slide.title}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 90vw, 40vw"
-        />
+      <div className="relative aspect-[16/9] w-full bg-muted/40">
+        <div className="absolute inset-0 grid place-items-center">
+          <div className="rounded-lg border border-border bg-background/60 px-3 py-2 text-xs text-muted-foreground">
+            Add a thumbnail/poster for: <span className="text-foreground">{slide.title}</span>
+          </div>
+        </div>
         <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/25 to-transparent" />
       </div>
     );
   }
 
-  if (slide.type === "video") {
-    return (
-      <div className="relative aspect-[16/9] w-full overflow-hidden">
-        <video
-          className="h-full w-full object-cover"
-          src={slide.src}
-          poster={slide.poster}
-          muted
-          playsInline
-          loop
-          autoPlay
-          preload="metadata"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/25 to-transparent" />
-      </div>
-    );
-  }
-
-  // GLTF
   return (
-    <div className="relative aspect-[16/9] w-full">
-      <div className="absolute inset-0">
-        <GltfPreview url={slide.src} />
+    <div className="relative aspect-[16/9] w-full overflow-hidden">
+      <Image
+        src={thumb}
+        alt={slide.title}
+        fill
+        priority={priority}
+        sizes="(max-width: 768px) 90vw, 45vw"
+        className="object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/25 to-transparent" />
+
+      {/* Small badge so user knows what it is */}
+      <div className="absolute left-3 top-3 rounded-full border border-border/60 bg-background/70 px-2 py-1 text-[11px] text-muted-foreground backdrop-blur">
+        {slide.type.toUpperCase()}
       </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/15 to-transparent pointer-events-none" />
+
+      {slide.type === "video" && (
+        <div className="absolute right-3 top-3 rounded-full border border-border/60 bg-background/70 px-2 py-1 text-[11px] text-muted-foreground backdrop-blur">
+          Click to play
+        </div>
+      )}
+
+      {slide.type === "gltf" && (
+        <div className="absolute right-3 top-3 rounded-full border border-border/60 bg-background/70 px-2 py-1 text-[11px] text-muted-foreground backdrop-blur">
+          Click to view 3D
+        </div>
+      )}
     </div>
   );
 }
@@ -134,7 +139,6 @@ function ExpandedModal({
   const panelRef = React.useRef<HTMLDivElement | null>(null);
   const closeBtnRef = React.useRef<HTMLButtonElement | null>(null);
 
-  // animate in when opened
   React.useLayoutEffect(() => {
     if (!open) return;
     if (!rootRef.current || !backdropRef.current || !panelRef.current) return;
@@ -160,7 +164,6 @@ function ExpandedModal({
     return () => ctx.revert();
   }, [open]);
 
-  // esc + scroll lock
   React.useEffect(() => {
     if (!open) return;
 
@@ -197,14 +200,7 @@ function ExpandedModal({
   if (!open || !slide) return null;
 
   return (
-    <div
-      ref={rootRef}
-      className="fixed inset-0 z-50"
-      style={{ opacity: 0 }}
-      role="dialog"
-      aria-modal="true"
-      aria-label={`Expanded view: ${slide.title}`}
-    >
+    <div ref={rootRef} className="fixed inset-0 z-50" style={{ opacity: 0 }}>
       {/* Backdrop */}
       <button
         ref={backdropRef}
@@ -221,15 +217,15 @@ function ExpandedModal({
         className="relative mx-auto mt-10 w-[min(1200px,92vw)] overflow-hidden rounded-2xl border border-border bg-background shadow-2xl"
         style={{ opacity: 0 }}
       >
-        <div className="relative aspect-[16/9] w-full">
+        <div className="relative aspect-[16/9] w-full bg-black">
           {slide.type === "image" && (
             <Image
               src={slide.src}
               alt={slide.title}
               fill
-              className="object-contain bg-black"
-              sizes="(max-width: 768px) 92vw, 1200px"
               priority
+              sizes="(max-width: 768px) 92vw, 1200px"
+              className="object-contain"
             />
           )}
 
@@ -241,11 +237,13 @@ function ExpandedModal({
               controls
               playsInline
               autoPlay
+              preload="metadata"
             />
           )}
 
           {slide.type === "gltf" && (
-            <div className="absolute inset-0 bg-black">
+            <div className="absolute inset-0">
+              {/* ✅ 3D only renders here (modal only) */}
               <GltfPreview url={slide.src} />
             </div>
           )}
@@ -277,7 +275,6 @@ export default function ToolsCarousel() {
   const [api, setApi] = React.useState<CarouselApi | null>(null);
   const [selected, setSelected] = React.useState(0);
 
-  // modal state
   const [open, setOpen] = React.useState(false);
   const [activeSlide, setActiveSlide] = React.useState<Slide | null>(null);
 
@@ -288,7 +285,6 @@ export default function ToolsCarousel() {
 
   const closeSlide = () => {
     setOpen(false);
-    // after closing, clear content so next open is clean
     setTimeout(() => setActiveSlide(null), 0);
   };
 
@@ -319,16 +315,20 @@ export default function ToolsCarousel() {
               const opacity = 1 - Math.abs(dist) * 0.22;
               const isCenter = dist === 0;
 
+              // ✅ Hide far slides completely to reduce paint work
+              const isVisible = Math.abs(dist) <= 3;
+
               return (
                 <CarouselItem
-                  key={s.id} // ✅ stable unique keys
+                  key={s.id}
                   className="pl-6 basis-[90%] sm:basis-[70%] md:basis-[48%] lg:basis-[38%]"
                 >
                   <div
                     className="transition-transform duration-500 ease-out will-change-transform"
                     style={{
                       transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
-                      opacity,
+                      opacity: isVisible ? opacity : 0,
+                      pointerEvents: isVisible ? "auto" : "none",
                       transformStyle: "preserve-3d",
                     }}
                   >
@@ -343,9 +343,9 @@ export default function ToolsCarousel() {
                         isCenter ? "ring-1 ring-primary/40" : "",
                       ].join(" ")}
                     >
-                      {/* keep media non-interactive inside carousel so dragging works */}
+                      {/* ✅ lightweight thumbnail only (no video/canvas here) */}
                       <div className="pointer-events-none">
-                        <SlideMedia slide={s} />
+                        <CarouselThumb slide={s} priority={isCenter} />
                       </div>
 
                       <div className="space-y-2 p-5">

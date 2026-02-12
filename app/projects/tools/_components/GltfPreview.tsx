@@ -5,19 +5,20 @@ import { Canvas, useThree } from "@react-three/fiber";
 import { Environment, OrbitControls, useGLTF } from "@react-three/drei";
 import { DRACOLoader, KTX2Loader } from "three-stdlib";
 
-function CompressedModel({ url }: { url: string }) {
+function Model({ url }: { url: string }) {
   const gl = useThree((s) => s.gl);
 
   const draco = React.useMemo(() => {
-    const loader = new DRACOLoader();
-    loader.setDecoderPath("/draco/"); // ✅ public/draco/*
-    return loader;
+    const d = new DRACOLoader();
+    d.setDecoderPath("/draco/");
+    return d;
   }, []);
 
   const ktx2 = React.useMemo(() => {
-    return new KTX2Loader()
-      .setTranscoderPath("/basis/") // ✅ public/basis/*
-      .detectSupport(gl);
+    const k = new KTX2Loader();
+    k.setTranscoderPath("/basis/");
+    k.detectSupport(gl);
+    return k;
   }, [gl]);
 
   const gltf = useGLTF(url, false, false, (loader) => {
@@ -32,25 +33,22 @@ function CompressedModel({ url }: { url: string }) {
     };
   }, [draco, ktx2]);
 
-  return (
-    <primitive
-      object={gltf.scene}
-      // If it looks too big/small:
-      // scale={0.8}
-      // rotation={[0, Math.PI, 0]}
-    />
-  );
+  return <primitive object={gltf.scene} />;
 }
 
 export default function GltfPreview({ url }: { url: string }) {
   return (
-    <Canvas camera={{ position: [0, 0.8, 2.4], fov: 40 }} dpr={[1, 2]}>
+    <Canvas
+      camera={{ position: [0, 0.8, 2.4], fov: 40 }}
+      dpr={1}                 // ✅ faster than [1,2]
+      gl={{ antialias: true }} // you can set false if you want even faster
+    >
       <ambientLight intensity={0.6} />
       <directionalLight position={[3, 4, 2]} intensity={1} />
 
       <React.Suspense fallback={null}>
         <group position={[0, -0.6, 0]}>
-          <CompressedModel url={url} />
+          <Model url={url} />
         </group>
         <Environment preset="city" />
       </React.Suspense>

@@ -5,7 +5,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
-export default function XRProjectPage() {
+export default function webDevProjectPage() {
   const root = useRef<HTMLDivElement | null>(null);
 
   useLayoutEffect(() => {
@@ -50,9 +50,16 @@ export default function XRProjectPage() {
     return () => ctx.revert();
   }, []);
 
-  const images = Array.from({ length: 8 }).map(
-    (_, i) => `https://assets.codepen.io/16327/portrait-image-${i + 1}.jpg`
-  );
+const images = [
+  "/images/webDev/dev01.jpg",
+  "/images/webDev/dev02.png",
+  "/images/webDev/dev03.jpg",
+  "/images/webDev/dev04.png",
+  "/images/webDev/dev05.jpg",
+  "/images/webDev/dev06.jpg",
+  
+];
+
 
   return (
     <section ref={root} className="space-y-6">
@@ -60,20 +67,18 @@ export default function XRProjectPage() {
         Software Developer Portfolio
       </h1>
 
-      <p className="text-sm text-muted uppercase">
-        Coming soon.  This page is a work in progress.
-      </p>
+     
 
       <section className="mt-10 text-center text-sm text-muted">
         <h3>Scroll down for the Gallery</h3>
       </section>
 
-      <div className="rounded-xl border border-border bg-card p-6 overflow-hidden">
+      <div className="rounded-xl border border-border bg-card p-6 overflow-hidden ">
         <div className="horiz-pin">
           <div className="horiz-gallery-wrapper w-full overflow-hidden">
             <div className="horiz-gallery-strip flex gap-6 will-change-transform">
               {images.map((src) => (
-                <div key={src} className="flex-none w-[70vw] max-w-[720px]">
+                <div key={src} className="flex-none w-[70vw] max-w-[720px] ">
                   <Image
                     src={src}
                     alt=""

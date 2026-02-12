@@ -22,7 +22,7 @@ export default function ToolsProjectPage() {
         VR|AR, 3D and Game Tools & Pipeline
       </h1>
 
-      <p className="max-w-2xl text-muted">Coming soon</p>
+     
 
       {/* GLASS RECTANGLE ON TOP */}
       <div className="relative z-10 rounded-xl border border-border bg-card/10 backdrop-blur p-6 min-h-[720px]">
