@@ -1,5 +1,4 @@
-//  tools/_components/ToolsCarousel.tsx
-
+// tools/_components/ToolsCarousel.tsx
 "use client";
 
 import * as React from "react";
@@ -19,6 +18,7 @@ import {
 const GltfPreview = dynamic(() => import("./GltfPreview"), { ssr: false });
 
 type SlideBase = {
+  id: string; // ✅ stable unique key
   title: string;
   subtitle: string;
 };
@@ -43,28 +43,37 @@ type Slide = ImageSlide | VideoSlide | GltfSlide;
 
 const SLIDES: Slide[] = [
   {
+    id: "livewire-gltf",
     type: "gltf",
     title: "LiveWire - 3D Preview",
     subtitle: "GLB model preview inside the carousel.",
     src: "/models/LiveWire.glb",
   },
+  // {
+  //   id: "blueprint-carcolor-video",
+  //   type: "video",
+  //   title: "Blueprint Car Color - Unreal Demo",
+  //   subtitle: "Realtime material/color switching demo video.",
+  //   src: "/videos/blueprintCArColorUnrealDemo.mp4",
+  //   // poster: "/images/blueprint-car-poster.jpg",
+  // },
   {
-    type: "video",
-    title: "Blueprint Car Color - Unreal Demo",
-    subtitle: "Realtime material/color switching demo video.",
-    src: "/videos/blueprintCArColorUnrealDemo.mp4",
-    // poster: "/images/blueprint-car-poster.jpg",
-  },
-  {
+    id: "vr-proto-01",
     type: "video",
     title: "VR Prototyping - Unreal Demo",
     subtitle: "VR prototyping demo video.",
-    src: "/videos/vrProto.mp4",
+    src: "/videos/vrProto2.mp4",
+  },
+  {
+    id: "vr-proto-02",
+    type: "video",
+    title: "VR Prototyping - Unreal Demo",
+    subtitle: "VR prototyping demo video.",
+    src: "/videos/Canopys.mp4",
   },
 ];
 
-const clamp = (n: number, min: number, max: number) =>
-  Math.max(min, Math.min(max, n));
+const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(max, n));
 
 function SlideMedia({ slide }: { slide: Slide }) {
   if (slide.type === "image") {
@@ -145,7 +154,6 @@ function ExpandedModal({
         { opacity: 1, scale: 1, y: 0, duration: 0.22, ease: "power2.out" }
       );
 
-      // focus close button for accessibility
       requestAnimationFrame(() => closeBtnRef.current?.focus());
     });
 
@@ -176,12 +184,12 @@ function ExpandedModal({
       return;
     }
 
-    const tl = gsap.timeline({
-      defaults: { ease: "power2.inOut" },
-      onComplete: onClose,
-    });
-
-    tl.to(panelRef.current, { opacity: 0, scale: 0.96, y: 10, duration: 0.18 }, 0)
+    gsap
+      .timeline({
+        defaults: { ease: "power2.inOut" },
+        onComplete: onClose,
+      })
+      .to(panelRef.current, { opacity: 0, scale: 0.96, y: 10, duration: 0.18 }, 0)
       .to(backdropRef.current, { opacity: 0, duration: 0.16 }, 0.02)
       .set(rootRef.current, { autoAlpha: 0 });
   };
@@ -189,7 +197,14 @@ function ExpandedModal({
   if (!open || !slide) return null;
 
   return (
-    <div ref={rootRef} className="fixed inset-0 z-50" style={{ opacity: 0 }}>
+    <div
+      ref={rootRef}
+      className="fixed inset-0 z-50"
+      style={{ opacity: 0 }}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Expanded view: ${slide.title}`}
+    >
       {/* Backdrop */}
       <button
         ref={backdropRef}
@@ -197,6 +212,7 @@ function ExpandedModal({
         onClick={animateClose}
         aria-label="Close expanded view"
         style={{ opacity: 0 }}
+        type="button"
       />
 
       {/* Panel */}
@@ -212,6 +228,7 @@ function ExpandedModal({
               alt={slide.title}
               fill
               className="object-contain bg-black"
+              sizes="(max-width: 768px) 92vw, 1200px"
               priority
             />
           )}
@@ -238,9 +255,7 @@ function ExpandedModal({
 
         <div className="flex items-start justify-between gap-4 p-5">
           <div className="space-y-1">
-            <h2 className="text-lg font-semibold tracking-tight text-primary">
-              {slide.title}
-            </h2>
+            <h2 className="text-lg font-semibold tracking-tight text-primary">{slide.title}</h2>
             <p className="text-sm text-muted-foreground">{slide.subtitle}</p>
           </div>
 
@@ -248,6 +263,7 @@ function ExpandedModal({
             ref={closeBtnRef}
             onClick={animateClose}
             className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-muted"
+            type="button"
           >
             Close
           </button>
@@ -305,7 +321,7 @@ export default function ToolsCarousel() {
 
               return (
                 <CarouselItem
-                  key={`${s.type}-${s.title}`}
+                  key={s.id} // ✅ stable unique keys
                   className="pl-6 basis-[90%] sm:basis-[70%] md:basis-[48%] lg:basis-[38%]"
                 >
                   <div
@@ -332,7 +348,7 @@ export default function ToolsCarousel() {
                         <SlideMedia slide={s} />
                       </div>
 
-                      <div className="p-5 space-y-2">
+                      <div className="space-y-2 p-5">
                         <div className="flex items-center justify-between gap-3">
                           <h3 className="text-base font-semibold tracking-tight text-primary">
                             {s.title}
