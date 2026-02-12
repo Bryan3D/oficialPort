@@ -227,8 +227,10 @@ export default function Coverflow() {
         ref={overlayRef}
         className={`cf-overlay ${openIdx !== null ? "is-open" : ""}`}
         onMouseDown={(e) => {
-          if (e.target === e.currentTarget) closeLightbox();
+        if (e.target === e.currentTarget) closeLightbox();
         }}
+        role="dialog"
+        aria-modal={openIdx !== null}
         aria-hidden={openIdx === null}
       >
         <button className="cf-overlayClose" onClick={closeLightbox} type="button" aria-label="Close">
