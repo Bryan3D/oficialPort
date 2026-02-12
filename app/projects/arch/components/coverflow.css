@@ -1,0 +1,223 @@
+.cf-root {
+  width: min(980px, 96vw);
+  margin: 3rem auto 0;
+  color: #d7d7d7;
+}
+
+.cf-stage {
+  position: relative;
+  height: 340px;
+  display: grid;
+  place-items: center;
+  perspective: 1000px;
+  perspective-origin: 50% 35%;
+}
+
+.cf-list {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  transform-style: preserve-3d;
+}
+
+.cf-item {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  will-change: transform, opacity;
+  user-select: none;
+}
+
+.cf-card {
+  width: 420px;
+  height: 420px;
+  position: relative;
+  margin-top: 100px;
+}
+
+.cf-imgWrap {
+  width: 400px;
+  height: 200px;
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.55);
+  background: #2a2a2a;
+}
+
+.cf-img {
+  object-fit: cover;
+
+}
+
+.cf-caption {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+  opacity: var(--capOpacity, 0.35);
+  transition: opacity 0.2s ease;
+}
+
+/* reflection */
+.cf-reflection {
+  position: absolute;
+  left: 0;
+  top: 190px;
+  width: 100%;
+  height: 110px;
+  opacity: 0.32;
+  transform: translateZ(-1px);
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0));
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0));
+}
+
+.cf-imgWrap--reflect {
+  transform: scaleY(-1);
+  border-radius: 14px;
+}
+
+.cf-img--reflect {
+  filter: blur(0.2px);
+}
+
+/* controls */
+.cf-controls {
+  margin: 1.2rem auto 0;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cf-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(30, 30, 30, 0.9);
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  margin-top: 300px;
+}
+
+.cf-btn:hover {
+  color: rgba(255, 255, 255, 0.95);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.cf-btn.is-active {
+  color: rgba(255, 255, 255, 1);
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(50, 50, 50, 0.95);
+}
+
+/* ---------- Lightbox overlay (FLIP target) ---------- */
+.cf-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0);
+  opacity: 0;
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+}
+
+.cf-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* The selected li gets appended into the overlay – make it big */
+.cf-item--hero .cf-card {
+  width: min(1100px, 100vw);
+  height: auto;
+}
+
+.cf-item--hero .cf-imgWrap {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: 18px;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.65);
+  background: #111;
+}
+
+.cf-item--hero .cf-img {
+  object-fit: contain; /* change to cover if you want */
+}
+
+.cf-item--hero .cf-reflection {
+  display: none;
+}
+
+.cf-item--hero .cf-caption {
+  font-size: 16px;
+  margin-top: 14px;
+  opacity: 1;
+}
+
+/* close button */
+.cf-overlayClose {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(20, 20, 20, 0.7);
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+}
+
+
+/* helps prevent soft rendering during transforms */
+.cf-item,
+.cf-imgWrap,
+.cf-img {
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  transform: translateZ(0);
+}
+
+/* ensure hero is not dimmed/filtered */
+.cf-item--hero {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+.cf-item--hero .cf-img {
+  object-fit: contain;
+}
+
+.cf-item--hero .cf-img {
+  object-fit: cover;
+}
+
+/* When the item is in the overlay, center it */
+.cf-overlay .cf-item {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+
+  /* center inside overlay */
+  margin: 0 auto;
+}
+
+/* Also ensure the hero card is centered nicely */
+.cf-overlay .cf-card {
+  margin: 0 auto;
+}
+
