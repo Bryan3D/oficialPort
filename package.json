@@ -8,7 +8,8 @@
   "build": "next build",
   "start": "next start",
   "lint": "eslint",
-  "prepare": "if [ \"$HUSKY\" != \"0\" ]; then husky install; fi"
+  "prepare": "husky install || true"
+
 },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
