@@ -13,32 +13,18 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-// ✅ Only load 3D when modal is open
 const GltfPreview = dynamic(() => import("./GltfPreview"), { ssr: false });
 
 type SlideBase = {
   id: string;
   title: string;
   subtitle: string;
-  thumb?: string; // lightweight image used in carousel
+  thumb?: string;
 };
 
-type ImageSlide = SlideBase & {
-  type: "image";
-  src: string; // full image (optional to show in modal)
-};
-
-type VideoSlide = SlideBase & {
-  type: "video";
-  src: string;
-  poster?: string; // used as carousel thumb + video poster
-};
-
-type GltfSlide = SlideBase & {
-  type: "gltf";
-  src: string; // glb path
-  thumb?: string; // recommended thumbnail for carousel
-};
+type ImageSlide = SlideBase & { type: "image"; src: string };
+type VideoSlide = SlideBase & { type: "video"; src: string; poster?: string };
+type GltfSlide = SlideBase & { type: "gltf"; src: string; thumb?: string };
 
 type Slide = ImageSlide | VideoSlide | GltfSlide;
 
@@ -49,27 +35,28 @@ const SLIDES: Slide[] = [
     title: "LiveWire - 3D Preview",
     subtitle: "GLB model preview (loads only when expanded).",
     src: "/models/LiveWire.glb",
-    thumb: "/images/livewire-thumb.jpg", // ✅ create a screenshot thumb for speed
+    thumb: "/images/livewire-thumb.jpg",
   },
   {
     id: "vr-proto-01",
     type: "video",
     title: "VR Prototyping - Unreal Demo",
     subtitle: "VR prototyping demo video.",
-    src: "/videos/vrProto2.mp4",
+    src: "/videos/vrProto3.mp4", // ✅ use your compressed version
     poster: "/images/vrproto-poster.jpg",
   },
   {
     id: "vr-proto-02",
     type: "video",
     title: "Canopies - Drone / VR",
-    subtitle: "Canopies demo video.",
-    src: "/videos/Canopys.mp4",
+    subtitle: "Canopies Demo Video.",
+    src: "/videos/Canopys_2.mp4", // ✅ use your compressed version
     poster: "/images/canopys-poster.jpg",
   },
 ];
 
-const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(max, n));
+const clamp = (n: number, min: number, max: number) =>
+  Math.max(min, Math.min(max, n));
 
 function CarouselThumb({ slide, priority }: { slide: Slide; priority: boolean }) {
   const thumb =
@@ -80,12 +67,12 @@ function CarouselThumb({ slide, priority }: { slide: Slide; priority: boolean })
       : slide.thumb;
 
   if (!thumb) {
-    // Fallback if you don't have posters/thumbs yet
     return (
       <div className="relative aspect-[16/9] w-full bg-muted/40">
         <div className="absolute inset-0 grid place-items-center">
           <div className="rounded-lg border border-border bg-background/60 px-3 py-2 text-xs text-muted-foreground">
-            Add a thumbnail/poster for: <span className="text-foreground">{slide.title}</span>
+            Add a thumbnail/poster for:{" "}
+            <span className="text-foreground">{slide.title}</span>
           </div>
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/25 to-transparent" />
@@ -105,21 +92,45 @@ function CarouselThumb({ slide, priority }: { slide: Slide; priority: boolean })
       />
       <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/25 to-transparent" />
 
-      {/* Small badge so user knows what it is */}
       <div className="absolute left-3 top-3 rounded-full border border-border/60 bg-background/70 px-2 py-1 text-[11px] text-muted-foreground backdrop-blur">
         {slide.type.toUpperCase()}
       </div>
+    </div>
+  );
+}
 
-      {slide.type === "video" && (
-        <div className="absolute right-3 top-3 rounded-full border border-border/60 bg-background/70 px-2 py-1 text-[11px] text-muted-foreground backdrop-blur">
-          Click to play
-        </div>
-      )}
+function LazyVideo({ src, poster }: { src: string; poster?: string }) {
+  const [armed, setArmed] = React.useState(false);
+  const videoRef = React.useRef<HTMLVideoElement | null>(null);
 
-      {slide.type === "gltf" && (
-        <div className="absolute right-3 top-3 rounded-full border border-border/60 bg-background/70 px-2 py-1 text-[11px] text-muted-foreground backdrop-blur">
-          Click to view 3D
-        </div>
+  React.useEffect(() => {
+    if (!armed) return;
+    videoRef.current?.play().catch(() => {});
+  }, [armed]);
+
+  return (
+    <div className="relative h-full w-full">
+      <video
+        ref={videoRef}
+        className="h-full w-full object-contain bg-black"
+        controls
+        playsInline
+        preload="none"
+        poster={poster}
+        src={armed ? src : undefined}
+      />
+
+      {!armed && (
+        <button
+          type="button"
+          onClick={() => setArmed(true)}
+          className="absolute inset-0 grid place-items-center"
+          aria-label="Load and play video"
+        >
+          <span className="rounded-full border border-border bg-background/70 px-4 py-2 text-sm text-primary backdrop-blur">
+            Click to load video
+          </span>
+        </button>
       )}
     </div>
   );
@@ -146,12 +157,7 @@ function ExpandedModal({
     const ctx = gsap.context(() => {
       gsap.set(rootRef.current, { autoAlpha: 1 });
 
-      gsap.fromTo(
-        backdropRef.current,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.18, ease: "power1.out" }
-      );
-
+      gsap.fromTo(backdropRef.current, { opacity: 0 }, { opacity: 1, duration: 0.18 });
       gsap.fromTo(
         panelRef.current,
         { opacity: 0, scale: 0.94, y: 16, transformOrigin: "50% 50%" },
@@ -182,16 +188,10 @@ function ExpandedModal({
   }, [open, onClose]);
 
   const animateClose = () => {
-    if (!backdropRef.current || !panelRef.current || !rootRef.current) {
-      onClose();
-      return;
-    }
+    if (!backdropRef.current || !panelRef.current || !rootRef.current) return onClose();
 
     gsap
-      .timeline({
-        defaults: { ease: "power2.inOut" },
-        onComplete: onClose,
-      })
+      .timeline({ defaults: { ease: "power2.inOut" }, onComplete: onClose })
       .to(panelRef.current, { opacity: 0, scale: 0.96, y: 10, duration: 0.18 }, 0)
       .to(backdropRef.current, { opacity: 0, duration: 0.16 }, 0.02)
       .set(rootRef.current, { autoAlpha: 0 });
@@ -201,7 +201,6 @@ function ExpandedModal({
 
   return (
     <div ref={rootRef} className="fixed inset-0 z-50" style={{ opacity: 0 }}>
-      {/* Backdrop */}
       <button
         ref={backdropRef}
         className="absolute inset-0 bg-black/75"
@@ -211,7 +210,6 @@ function ExpandedModal({
         type="button"
       />
 
-      {/* Panel */}
       <div
         ref={panelRef}
         className="relative mx-auto mt-10 w-[min(1200px,92vw)] overflow-hidden rounded-2xl border border-border bg-background shadow-2xl"
@@ -230,20 +228,11 @@ function ExpandedModal({
           )}
 
           {slide.type === "video" && (
-            <video
-              className="h-full w-full object-contain bg-black"
-              src={slide.src}
-              poster={slide.poster}
-              controls
-              playsInline
-              autoPlay
-              preload="metadata"
-            />
+            <LazyVideo src={slide.src} poster={slide.poster} />
           )}
 
           {slide.type === "gltf" && (
             <div className="absolute inset-0">
-              {/* ✅ 3D only renders here (modal only) */}
               <GltfPreview url={slide.src} />
             </div>
           )}
@@ -304,6 +293,7 @@ export default function ToolsCarousel() {
     <div className="w-full">
       <div className="[perspective:1200px]">
         <Carousel setApi={setApi} opts={{ align: "center", loop: true }}>
+          {/* ✅ THIS must be CarouselContent, not LazyVideo */}
           <CarouselContent className="-ml-6 py-6">
             {SLIDES.map((s, i) => {
               const dist = clamp(i - selected, -3, 3);
@@ -314,8 +304,6 @@ export default function ToolsCarousel() {
               const scale = 1 - Math.abs(dist) * 0.12;
               const opacity = 1 - Math.abs(dist) * 0.22;
               const isCenter = dist === 0;
-
-              // ✅ Hide far slides completely to reduce paint work
               const isVisible = Math.abs(dist) <= 3;
 
               return (
@@ -343,8 +331,8 @@ export default function ToolsCarousel() {
                         isCenter ? "ring-1 ring-primary/40" : "",
                       ].join(" ")}
                     >
-                      {/* ✅ lightweight thumbnail only (no video/canvas here) */}
                       <div className="pointer-events-none">
+                        {/* ✅ thumbnail only */}
                         <CarouselThumb slide={s} priority={isCenter} />
                       </div>
 
@@ -362,19 +350,6 @@ export default function ToolsCarousel() {
                         </div>
 
                         <p className="text-sm text-muted-foreground">{s.subtitle}</p>
-
-                        <div className="flex items-center gap-2 pt-2 text-[11px] text-muted-foreground">
-                          <span className="rounded-full border border-border/60 bg-background/30 px-2 py-0.5">
-                            {s.type.toUpperCase()}
-                          </span>
-                          <span className="opacity-70">Click to expand • Drag or use arrows</span>
-                        </div>
-                      </div>
-
-                      <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100">
-                        <div className="absolute right-3 top-3 rounded-full border border-border/60 bg-background/60 px-2 py-1 text-[11px] text-muted-foreground">
-                          Expand
-                        </div>
                       </div>
                     </button>
                   </div>

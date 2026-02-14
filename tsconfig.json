@@ -33,7 +33,8 @@
     "app/about/page.tsx.old",
     "app/about/page.tsx.olds",
     "app/tailwind.config.ts",
-    "app/projects/tools/page.tsx"
+    "app/projects/tools/page.tsx",
+    "app/contact/page.tsx.old"
   ],
   "exclude": ["node_modules"]
 }

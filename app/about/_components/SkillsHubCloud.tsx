@@ -37,7 +37,7 @@ const SKILLS: Skill[] = [
   { name: "Kotlin", icon: "/skills/kotlin-colored.svg", kind: "svg", tone: "white" },
   { name: "Maya", icon: "/skills/maya-2017.svg", kind: "svg", tone: "white" },
   { name: "3ds Max", icon: "/skills/max.svg", kind: "svg", tone: "white" },
-  { name: "Revit", icon: "/skills/revit.png", kind: "img", tone: "white" },
+  { name: "Revit", icon: "/skills/revit.svg", kind: "img", tone: "white" },
 ];
 
 function toneClass(t?: Skill["tone"]) {

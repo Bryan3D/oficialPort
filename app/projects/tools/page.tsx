@@ -25,7 +25,7 @@ export default function ToolsProjectPage() {
      
 
       {/* GLASS RECTANGLE ON TOP */}
-      <div className="relative z-10 rounded-xl border border-border bg-card/10 backdrop-blur p-6 min-h-[720px]">
+      <div className="relative z-10 rounded-xl border border-border bg-card/10 backdrop-blur p-6 min-h-[720px] mt-30">
         <ToolsCarousel />
       </div>
     </section>
